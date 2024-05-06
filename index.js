@@ -95,7 +95,8 @@ app.get("/luta/:id/:id2", async (req, res) => {
             campeao = personagem1;
             perdedor = personagem2;
         }
-        res.send({ campeao, perdedor})
+        AddHistorico(campeao.id, perdedor.id);
+        res.send({ campeao, perdedor});
     } catch (error){
         console.log(error);
         res.sendStatus(500)
@@ -110,3 +111,8 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT} 🚀`);
 });
+
+const AddHistorico = (campeao, perdedor) => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    pool.query("INSERT INTO historico (vencedor, perdedor, data ) VALUES ($1, $2, $3)", [campeao, perdedor, currentDate]);
+};
