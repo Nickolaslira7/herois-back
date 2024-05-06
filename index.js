@@ -46,6 +46,18 @@ app.post("/hero", async (req, res) => {
     }
 });
 
+app.put("/hero/:id", async (req, res) => {
+    const { id } = req.params;
+    const { nome, vida, dano, defesa} = req.body;
+    try {
+        await pool.query("UPDATE personagem SET nome = $1, vida = $2, dano = $3, defesa = $4 WHERE id = $5", [nome, vida, dano, defesa, id]);
+        res.send("Personagem atualizado com sucesso!");
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 
 app.get("/", (req, res) => {
     res.send("Seja Bem-vindo a API de HEROS");
