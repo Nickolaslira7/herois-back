@@ -1,8 +1,7 @@
 CREATE TABLE characters (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    HP INT NOT NULL,
-    DMG INT NOT NULL,
-    DEF INT NOT NULL,
-    CLASS VARCHAR(255) NOT NULL
+    nome VARCHAR(255) NOT NULL,
+    vida INT NOT NULL,
+    dano INT NOT NULL,
+    defesa INT NOT NULL
 );
