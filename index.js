@@ -57,6 +57,50 @@ app.put("/hero/:id", async (req, res) => {
         res.sendStatus(500);
     }
 });
+app.delete("/hero/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query("DELETE FROM personagem WHERE id = $1", [id]);
+        res.send("Personagem deletado com sucesso!");
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+app.get("/luta/:id/:id2", async (req, res) => {
+    const {id, id2} = req.params;
+    try{
+        const {rows} = await pool.query("SELECT * FROM personagem where id = $1 OR id = $2", [id, id2])
+        const personagem1 = rows[0];
+        const personagem2 = rows[1];
+
+        if (!personagem1 || !personagem2) {
+            res.send("Personagem não encontrado");
+        }
+        let campeao = null;
+        let perdedor = null;
+
+        while (personagem1.vida > 0 && personagem2.vida > 0) {
+            personagem2.vida -= personagem1.dano - personagem2.defesa;
+            personagem1.vida -= personagem2.dano - personagem1.defesa;
+        }
+        if (personagem1.vida <= 0 || personagem2.vida > personagem1.vida) {
+            campeao = personagem2;
+            perdedor = personagem1;
+        } else if (personagem2.vida == personagem1.vida) {
+            campeao = null;
+        }
+        else {
+            campeao = personagem1;
+            perdedor = personagem2;
+        }
+        res.send({ campeao, perdedor})
+    } catch (error){
+        console.log(error);
+        res.sendStatus(500)
+    }
+})
 
 
 app.get("/", (req, res) => {
