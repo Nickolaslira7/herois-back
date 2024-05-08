@@ -103,6 +103,21 @@ app.get("/luta/:id/:id2", async (req, res) => {
     }
 })
 
+app.get("/historico", async (req, res) => {
+    try {
+        const query = `
+        SELECT c.nome AS vencedor, c2.nome AS perdedor, h.data 
+        FROM historico h
+        JOIN personagem c ON c.id = h.vencedor
+        JOIN personagem c2 ON c2.id = h.perdedor;
+        `;
+        const { rows } = await pool.query(query);
+        res.send(rows);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
 
 app.get("/", (req, res) => {
     res.send("Seja Bem-vindo a API de HEROS");
